@@ -1,0 +1,24 @@
+{
+  "name": "protective-put-calculator",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "ray build -e dist",
+    "dev": "ray develop",
+    "lint": "ray lint"
+  },
+  "dependencies": {
+    "axios": "^1.6.8",
+    "date-fns": "^3.6.0",
+    "@raycast/api": "^1.0.0",
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.10",
+    "@types/react": "^18.2.27",
+    "eslint": "^8.51.0",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2",
+    "@raycast/eslint-config": "^1.0.6"
+  }
+}
