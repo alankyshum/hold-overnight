@@ -2,6 +2,9 @@
 
 A production-ready Raycast extension that automates protective put strategy calculations for earnings plays with strict loss caps.
 
+![2025-06-19 18 25 38](https://github.com/user-attachments/assets/5be9b7b0-6d75-4160-bb27-bbe7419712ba)
+
+
 ## ✨ Features
 
 - **💰 Real-time calculations** with live market data from Alpha Vantage
