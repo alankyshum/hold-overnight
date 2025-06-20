@@ -72,7 +72,7 @@ Or use emoji:
 For real trading use:
 
 1. **Get options data API key:**
-   - Sign up for [IEX Cloud](https://iexcloud.io)
+   - Sign up for [Alpha Vantage](https://www.alphavantage.co/support/#api-key) (free tier available)
    - Replace mock option pricing with real data
 
 2. **Add API key storage:**

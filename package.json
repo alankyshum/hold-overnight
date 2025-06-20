@@ -67,12 +67,12 @@
           ]
         },
         {
-          "name": "iexApiKey",
-          "title": "IEX Cloud API Key",
-          "description": "Your IEX Cloud API key for real options data. Required for extension to work.",
+          "name": "alphaVantageApiKey",
+          "title": "Alpha Vantage API Key",
+          "description": "Your Alpha Vantage API key for real options data. Required for extension to work. Get free key at https://www.alphavantage.co/support/#api-key",
           "type": "password",
           "required": true,
-          "placeholder": "pk_your_api_key_here"
+          "placeholder": "your_alpha_vantage_api_key_here"
         }
       ]
     }

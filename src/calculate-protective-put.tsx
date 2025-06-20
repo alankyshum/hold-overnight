@@ -16,6 +16,9 @@ import {
   formatCurrency,
   formatShares,
   formatPercentage,
+  formatOptionDate,
+  formatBidAskSpread,
+  formatOptionContract,
 } from "./calculator";
 import { CalculationInputs, CalculationResult } from "./types";
 
@@ -28,7 +31,7 @@ interface Arguments {
 interface Preferences {
   defaultMaxLoss: string;
   defaultHoldingPeriod: string;
-  iexApiKey: string;
+  alphaVantageApiKey: string;
 }
 
 export default function CalculateProtectivePut(
@@ -73,9 +76,12 @@ export default function CalculateProtectivePut(
         }
 
         // Validate API key
-        if (!preferences.iexApiKey || !preferences.iexApiKey.trim()) {
+        if (
+          !preferences.alphaVantageApiKey ||
+          !preferences.alphaVantageApiKey.trim()
+        ) {
           setError(
-            "IEX Cloud API key is required. Please configure your API key in extension preferences.",
+            "Alpha Vantage API key is required. Please configure your API key in extension preferences.",
           );
           setIsLoading(false);
           return;
@@ -122,7 +128,7 @@ export default function CalculateProtectivePut(
           stopLoss: parsedStopLoss,
           maxLoss: parsedMaxLoss,
           holdingPeriod: selectedHoldingPeriod,
-          iexApiKey: preferences.iexApiKey,
+          alphaVantageApiKey: preferences.alphaVantageApiKey,
         };
 
         showToast(
@@ -168,7 +174,7 @@ export default function CalculateProtectivePut(
   if (error) {
     return (
       <Detail
-        markdown={`# ❌ Error\n\n${error}\n\n## Setup Required\n\nThis extension requires an IEX Cloud API key to fetch real options data.\n\n### Steps to fix:\n1. Sign up at [IEX Cloud](https://iexcloud.io/)\n2. Get your API key\n3. Go to Raycast → Extension Preferences → Protective Put Calculator\n4. Enter your IEX API key\n\n## Usage\nOnce configured, provide these arguments:\n- **ticker**: Stock symbol (e.g., AAPL)\n- **stopLoss**: Stop loss price (e.g., 150.00)\n- **maxLoss**: Maximum loss amount (optional, defaults to $500)`}
+        markdown={`# ❌ Error\n\n${error}\n\n## Setup Required\n\nThis extension requires an Alpha Vantage API key to fetch real options data.\n\n### Steps to fix:\n1. Sign up at [Alpha Vantage](https://www.alphavantage.co/support/#api-key) (free tier available)\n2. Get your API key\n3. Go to Raycast → Extension Preferences → Protective Put Calculator\n4. Enter your Alpha Vantage API key\n\n## Usage\nOnce configured, provide these arguments:\n- **ticker**: Stock symbol (e.g., AAPL)\n- **stopLoss**: Stop loss price (e.g., 150.00)\n- **maxLoss**: Maximum loss amount (optional, defaults to $500)`}
         actions={
           <ActionPanel>
             <Action.CopyToClipboard
@@ -196,7 +202,18 @@ export default function CalculateProtectivePut(
 - **Stop Loss**: ${formatCurrency(inputs.stopLoss)}
 - **Holding Period**: ${inputs.holdingPeriod}
 
-## 💰 Cost Breakdown
+## � Option Details
+- **Contract**: ${formatOptionContract(result.optionDetails)}
+- **Premium**: ${formatCurrency(result.optionDetails.midPrice)}
+- **Bid/Ask**: ${formatBidAskSpread(result.optionDetails.bid, result.optionDetails.ask)}
+- **Strike Price**: ${formatCurrency(result.optionDetails.strike)}
+- **Expiration**: ${formatOptionDate(result.optionDetails.expiration)}
+${result.optionDetails.volume !== "N/A" ? `- **Volume**: ${result.optionDetails.volume}` : ""}
+${result.optionDetails.openInterest !== "N/A" ? `- **Open Interest**: ${result.optionDetails.openInterest}` : ""}
+${result.optionDetails.impliedVolatility !== "N/A" ? `- **Implied Volatility**: ${result.optionDetails.impliedVolatility}` : ""}
+${result.optionDetails.isEstimated ? `- **⚠️ Note**: Premium is estimated (real market data unavailable)` : ""}
+
+## �💰 Cost Breakdown
 - **Stock Cost**: ${formatCurrency(result.stockCost)}
 - **Option Cost**: ${formatCurrency(result.optionCost)}
 - **Total Investment**: ${formatCurrency(result.totalCost)}
@@ -216,6 +233,8 @@ This protective put strategy limits downside risk to **${formatCurrency(result.a
 
   const copyText = `${inputs.ticker} Protective Put Strategy:
 Position: ${formatShares(result.shares)} shares + ${result.contracts} put contracts
+Option: ${formatOptionContract(result.optionDetails)}
+Premium: ${formatCurrency(result.optionDetails.midPrice)}
 Investment: ${formatCurrency(result.totalCost)}
 Max Loss: ${formatCurrency(result.actualMaxLoss)}
 Breakeven: ${formatCurrency(result.breakeven)}

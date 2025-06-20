@@ -11,6 +11,10 @@ export interface OptionData {
   ask: number;
   midPrice: number;
   expiration: string;
+  volume?: string;
+  openInterest?: string;
+  impliedVolatility?: string;
+  isEstimated?: boolean;
 }
 
 export interface CalculationResult {
@@ -23,6 +27,7 @@ export interface CalculationResult {
   optionCost: number;
   breakeven: number;
   protectionLevel: number;
+  optionDetails: OptionData;
 }
 
 export interface CalculationInputs {
@@ -30,7 +35,7 @@ export interface CalculationInputs {
   stopLoss: number;
   maxLoss: number;
   holdingPeriod: string;
-  iexApiKey: string;
+  alphaVantageApiKey: string;
 }
 
 export type HoldingPeriod = "1w" | "2w" | "1m";

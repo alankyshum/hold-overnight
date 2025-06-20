@@ -4,7 +4,8 @@ import { getCurrentPrice, getPutPremium } from "./api";
 export async function calculateProtectivePut(
   inputs: CalculationInputs,
 ): Promise<CalculationResult> {
-  const { ticker, stopLoss, maxLoss, holdingPeriod, iexApiKey } = inputs;
+  const { ticker, stopLoss, maxLoss, holdingPeriod, alphaVantageApiKey } =
+    inputs;
 
   // Validate inputs
   if (stopLoss <= 0) {
@@ -23,12 +24,13 @@ export async function calculateProtectivePut(
   }
 
   // Get put option premium
-  const putPremium = await getPutPremium(
+  const optionData = await getPutPremium(
     ticker,
     stopLoss,
     holdingPeriod,
-    iexApiKey,
+    alphaVantageApiKey,
   );
+  const putPremium = optionData.midPrice;
 
   // Calculate loss per share
   const lossPerShare = currentPrice - stopLoss + putPremium;
@@ -98,6 +100,7 @@ export async function calculateProtectivePut(
     optionCost,
     breakeven,
     protectionLevel: Math.min(protectionLevel, 100),
+    optionDetails: optionData,
   };
 }
 
@@ -116,4 +119,30 @@ export function formatPercentage(value: number): string {
 
 export function formatShares(shares: number): string {
   return shares.toLocaleString();
+}
+
+export function formatOptionDate(expirationDate: string): string {
+  // Convert YYYYMMDD to readable date
+  const year = expirationDate.slice(0, 4);
+  const month = expirationDate.slice(4, 6);
+  const day = expirationDate.slice(6, 8);
+  const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+  return date.toLocaleDateString("en-US", {
+    weekday: "short",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+export function formatBidAskSpread(bid: number, ask: number): string {
+  return `${formatCurrency(bid)} / ${formatCurrency(ask)}`;
+}
+
+export function formatOptionContract(
+  optionDetails: import("./types").OptionData,
+): string {
+  const expDate = formatOptionDate(optionDetails.expiration);
+  const strikeFormatted = formatCurrency(optionDetails.strike);
+  return `${strikeFormatted} PUT exp ${expDate}`;
 }

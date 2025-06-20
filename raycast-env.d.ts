@@ -19,8 +19,8 @@ declare namespace Preferences {
   "defaultMaxLoss": string,
   /** Default Holding Period - Default holding period (1w, 2w, 1m) */
   "defaultHoldingPeriod": "1w" | "2w" | "1m",
-  /** IEX Cloud API Key - Your IEX Cloud API key for real options data. Required for extension to work. */
-  "iexApiKey": string
+  /** Alpha Vantage API Key - Your Alpha Vantage API key for real options data. Required for extension to work. Get free key at https://www.alphavantage.co/support/#api-key */
+  "alphaVantageApiKey": string
 }
 }
 
