@@ -28,6 +28,7 @@ interface Arguments {
 interface Preferences {
   defaultMaxLoss: string;
   defaultHoldingPeriod: string;
+  iexApiKey: string;
 }
 
 export default function CalculateProtectivePut(
@@ -66,6 +67,15 @@ export default function CalculateProtectivePut(
         if (!stopLoss) {
           setError(
             "Missing stop loss price. Please provide a stop loss price as an argument.",
+          );
+          setIsLoading(false);
+          return;
+        }
+
+        // Validate API key
+        if (!preferences.iexApiKey || !preferences.iexApiKey.trim()) {
+          setError(
+            "IEX Cloud API key is required. Please configure your API key in extension preferences.",
           );
           setIsLoading(false);
           return;
@@ -112,6 +122,7 @@ export default function CalculateProtectivePut(
           stopLoss: parsedStopLoss,
           maxLoss: parsedMaxLoss,
           holdingPeriod: selectedHoldingPeriod,
+          iexApiKey: preferences.iexApiKey,
         };
 
         showToast(
@@ -157,7 +168,7 @@ export default function CalculateProtectivePut(
   if (error) {
     return (
       <Detail
-        markdown={`# ❌ Error\n\n${error}\n\n## Usage\nPlease provide valid arguments:\n- **ticker**: Stock symbol (e.g., AAPL)\n- **stopLoss**: Stop loss price (e.g., 150.00)\n- **maxLoss**: Maximum loss amount (optional, defaults to $500)`}
+        markdown={`# ❌ Error\n\n${error}\n\n## Setup Required\n\nThis extension requires an IEX Cloud API key to fetch real options data.\n\n### Steps to fix:\n1. Sign up at [IEX Cloud](https://iexcloud.io/)\n2. Get your API key\n3. Go to Raycast → Extension Preferences → Protective Put Calculator\n4. Enter your IEX API key\n\n## Usage\nOnce configured, provide these arguments:\n- **ticker**: Stock symbol (e.g., AAPL)\n- **stopLoss**: Stop loss price (e.g., 150.00)\n- **maxLoss**: Maximum loss amount (optional, defaults to $500)`}
         actions={
           <ActionPanel>
             <Action.CopyToClipboard
@@ -201,16 +212,7 @@ export default function CalculateProtectivePut(
 This protective put strategy limits downside risk to **${formatCurrency(result.actualMaxLoss)}** while maintaining full upside potential above **${formatCurrency(result.breakeven)}**.
 
 **${formatPercentage(result.protectionLevel)}** of your position is protected by the put options.
-
-## 📈 Key Benefits
-- ✅ Limited downside risk
-- ✅ Full upside potential
-- ✅ Known maximum loss
-- ✅ Professional risk management
-
----
-
-⚠️ **IMPORTANT**: This is for educational purposes only. Always consult with a financial advisor before making investment decisions.`;
+`;
 
   const copyText = `${inputs.ticker} Protective Put Strategy:
 Position: ${formatShares(result.shares)} shares + ${result.contracts} put contracts

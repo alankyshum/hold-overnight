@@ -4,7 +4,8 @@ A production-ready Raycast extension that automates protective put strategy calc
 
 ## ✨ Features
 
-- **💰 Real-time calculations** using mock Yahoo Finance API integration
+- **💰 Real-time calculations** with live market data from IEX Cloud
+- **🔗 IEX Cloud integration** for real options pricing (required)
 - **📊 Smart position sizing** that enforces maximum loss limits
 - **🎯 Contract optimization** handling for options positions
 - **⚡ Instant feedback** through Raycast's native interface
@@ -64,11 +65,28 @@ The position is then adjusted to account for options contract sizes (100 shares 
 - Max Loss: $495
 - Breakeven: $63.00
 
+## 🔧 Configuration
+
+### IEX Cloud API (Required)
+
+This extension requires an IEX Cloud API key for real options pricing data:
+
+1. **Get API Key**: Sign up at [IEX Cloud](https://iexcloud.io/)
+2. **Configure Extension**: Raycast → Extension Preferences → Protective Put Calculator
+3. **Enter API Key**: Add your IEX Cloud API key (required)
+
+⚠️ **The extension will not work without a valid IEX Cloud API key.**
+
+### Preferences
+
+- **Default Max Loss**: Default maximum loss amount ($500)
+- **Default Holding Period**: Default time horizon (1w, 2w, 1m)
+- **IEX API Key**: Your IEX Cloud API key for real data (required)
+
 ## Data Sources
 
 - **Stock Prices**: Yahoo Finance (free, no API key required)
-- **Options Data**: Estimated using simplified Black-Scholes model
-  - For production use, integrate with IEX Cloud or similar options data provider
+- **Options Data**: IEX Cloud API (real market data)
 
 ## Important Disclaimers
 

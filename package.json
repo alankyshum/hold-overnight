@@ -65,6 +65,14 @@
               "value": "1m"
             }
           ]
+        },
+        {
+          "name": "iexApiKey",
+          "title": "IEX Cloud API Key",
+          "description": "Your IEX Cloud API key for real options data. Required for extension to work.",
+          "type": "password",
+          "required": true,
+          "placeholder": "pk_your_api_key_here"
         }
       ]
     }

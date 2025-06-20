@@ -4,7 +4,7 @@ import { getCurrentPrice, getPutPremium } from "./api";
 export async function calculateProtectivePut(
   inputs: CalculationInputs,
 ): Promise<CalculationResult> {
-  const { ticker, stopLoss, maxLoss, holdingPeriod } = inputs;
+  const { ticker, stopLoss, maxLoss, holdingPeriod, iexApiKey } = inputs;
 
   // Validate inputs
   if (stopLoss <= 0) {
@@ -23,7 +23,12 @@ export async function calculateProtectivePut(
   }
 
   // Get put option premium
-  const putPremium = await getPutPremium(ticker, stopLoss, holdingPeriod);
+  const putPremium = await getPutPremium(
+    ticker,
+    stopLoss,
+    holdingPeriod,
+    iexApiKey,
+  );
 
   // Calculate loss per share
   const lossPerShare = currentPrice - stopLoss + putPremium;

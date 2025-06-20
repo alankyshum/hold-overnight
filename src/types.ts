@@ -30,6 +30,7 @@ export interface CalculationInputs {
   stopLoss: number;
   maxLoss: number;
   holdingPeriod: string;
+  iexApiKey: string;
 }
 
 export type HoldingPeriod = "1w" | "2w" | "1m";

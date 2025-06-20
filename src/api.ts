@@ -72,45 +72,33 @@ export function getExpirationDate(holdingPeriod: string): string {
   }
 }
 
-// Mock option data since IEX Cloud requires paid subscription
-// In real implementation, you'd use IEX Cloud or another options data provider
+// Get put premium - requires IEX Cloud API key for real options data
 export async function getPutPremium(
   ticker: string,
   strike: number,
   holdingPeriod: string,
+  iexApiKey: string,
 ): Promise<number> {
-  try {
-    // This is a simplified estimation based on typical option pricing
-    // In a real implementation, you would call an options data API
-    const currentPrice = await getCurrentPrice(ticker);
-    const stockPrice = currentPrice.price;
-
-    // Calculate intrinsic value
-    const intrinsicValue = Math.max(strike - stockPrice, 0);
-
-    // Estimate time value based on days to expiration and distance from money
-    const daysToExpiration =
-      holdingPeriod === "1w" ? 7 : holdingPeriod === "2w" ? 14 : 30;
-    const moneyness = strike / stockPrice;
-
-    // Simplified Black-Scholes approximation for educational purposes
-    const timeValue = Math.max(
-      stockPrice *
-        0.02 *
-        Math.sqrt(daysToExpiration / 365) *
-        (1 + Math.abs(1 - moneyness)),
-      0.05, // Minimum premium
+  if (!iexApiKey || !iexApiKey.trim()) {
+    throw new ApiError(
+      "IEX Cloud API key is required for options data. Please configure your API key in extension preferences.",
     );
+  }
 
-    const estimatedPremium = intrinsicValue + timeValue;
-
-    // Add some randomization to simulate real market conditions
-    const variance = estimatedPremium * 0.1;
-    const premium = estimatedPremium + (Math.random() - 0.5) * variance;
-
-    return Math.max(premium, 0.05); // Minimum $0.05 premium
+  try {
+    const expirationDate = getExpirationDate(holdingPeriod);
+    const realOptionData = await getRealPutPremium(
+      ticker,
+      strike,
+      expirationDate,
+      iexApiKey,
+    );
+    return realOptionData.midPrice;
   } catch (error) {
-    throw new ApiError(`Failed to estimate put premium: ${error}`);
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(`Failed to fetch options data: ${error}`);
   }
 }
 
