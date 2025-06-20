@@ -14,7 +14,59 @@
       "name": "calculate-protective-put",
       "title": "Calculate Protective Put",
       "description": "Calculate protective put strategy for stocks with loss cap",
-      "mode": "view"
+      "mode": "view",
+      "arguments": [
+        {
+          "name": "ticker",
+          "placeholder": "AAPL",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "stopLoss",
+          "placeholder": "150.00",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "maxLoss",
+          "placeholder": "500",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "preferences": [
+        {
+          "name": "defaultMaxLoss",
+          "title": "Default Maximum Loss",
+          "description": "Default maximum loss amount in dollars",
+          "type": "textfield",
+          "default": "500",
+          "required": false
+        },
+        {
+          "name": "defaultHoldingPeriod",
+          "title": "Default Holding Period",
+          "description": "Default holding period (1w, 2w, 1m)",
+          "type": "dropdown",
+          "default": "2w",
+          "required": false,
+          "data": [
+            {
+              "title": "1 Week",
+              "value": "1w"
+            },
+            {
+              "title": "2 Weeks",
+              "value": "2w"
+            },
+            {
+              "title": "1 Month",
+              "value": "1m"
+            }
+          ]
+        }
+      ]
     }
   ],
   "dependencies": {

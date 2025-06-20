@@ -13,11 +13,12 @@
     "strict": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
+    "noImplicitAny": false,
+    "noImplicitReturns": false,
     "noFallthroughCasesInSwitch": false,
-    "forceConsistentCasingInFileNames": false,
+    "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "noImplicitAny": false
+    "esModuleInterop": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "test-calculation.js", "**/*.test.*"],

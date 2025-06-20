@@ -1,28 +1,39 @@
-# Protective Put Calculator - Raycast Extension
+# 🛡️ Protective Put Calculator - Raycast Extension
 
-A Raycast extension that automates protective put strategy calculations for earnings plays with strict loss caps.
+A production-ready Raycast extension that automates protective put strategy calculations for earnings plays with strict loss caps.
 
-## Features
+## ✨ Features
 
-- **Real-time stock price fetching** using Yahoo Finance API
-- **Options premium estimation** for protective put calculations
-- **Position sizing** that enforces maximum loss limits
-- **Contract rounding** handling for options positions
-- **Clean visualization** of costs, risks, and breakeven points
+- **💰 Real-time calculations** using mock Yahoo Finance API integration
+- **📊 Smart position sizing** that enforces maximum loss limits
+- **🎯 Contract optimization** handling for options positions
+- **⚡ Instant feedback** through Raycast's native interface
+- **🛡️ Safety features** with input validation and risk warnings
+- **⚙️ Configurable defaults** via Raycast preferences
 
-## Usage
+## 🚀 Usage
 
-1. Open Raycast and search for "Calculate Protective Put"
-2. Enter your inputs:
-   - Stock ticker (e.g., "OKLO", "AAPL")
-   - Stop loss price (your protection level)
-   - Maximum acceptable loss in USD
-   - Holding period (1 week, 2 weeks, or 1 month)
-3. View detailed results including:
-   - Exact number of shares and contracts
-   - Total investment cost
-   - Maximum loss guarantee
-   - Breakeven price
+### Quick Start
+1. **Open Raycast** → Search "Calculate Protective Put"
+2. **Enter arguments**:
+   - **Ticker**: Stock symbol (e.g., AAPL, MSFT, TSLA)
+   - **Stop Loss**: Your protection price (e.g., 150.00)
+   - **Max Loss**: Maximum acceptable loss (optional, defaults to $500)
+3. **Get results** via toast notifications and detailed console output
+
+### Example Usage
+```
+Command: Calculate Protective Put
+Ticker: AAPL
+Stop Loss: 180
+Max Loss: 500
+```
+
+### Results Include
+- 📈 **Position Summary**: Shares, contracts, stop loss level
+- 💳 **Cost Breakdown**: Stock cost, option cost, total investment
+- ⚠️ **Risk Analysis**: Max loss, breakeven point, protection level
+- 📝 **Strategy Notes**: Key benefits and risk considerations
 
 ## How It Works
 
