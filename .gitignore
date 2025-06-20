@@ -76,3 +76,22 @@ coverage/
 
 # Serverless directories
 .serverless
+
+# TypeScript build cache
+*.tsbuildinfo
+
+# Temporary and duplicate files
+*_OLD.*
+*_NEW.*
+*-old.*
+*-new.*
+*-backup.*
+*-temp.*
+
+# Test outputs
+test-*.js
+test-*.ts
+
+# Icon generation scripts
+create-icon.*
+*.svg

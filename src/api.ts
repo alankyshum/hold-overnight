@@ -3,7 +3,10 @@ import { addDays, nextFriday, format } from "date-fns";
 import { StockQuote, OptionData } from "./types";
 
 export class ApiError extends Error {
-  constructor(message: string, public statusCode?: number) {
+  constructor(
+    message: string,
+    public statusCode?: number,
+  ) {
     super(message);
     this.name = "ApiError";
   }
@@ -15,8 +18,9 @@ export async function getCurrentPrice(ticker: string): Promise<StockQuote> {
     const response = await axios.get(url, {
       timeout: 10000,
       headers: {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
-      }
+        "User-Agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+      },
     });
 
     const data = response.data;
@@ -31,18 +35,23 @@ export async function getCurrentPrice(ticker: string): Promise<StockQuote> {
       symbol: meta.symbol,
       price: meta.regularMarketPrice || meta.previousClose,
       currency: meta.currency || "USD",
-      marketState: meta.marketState || "REGULAR"
+      marketState: meta.marketState || "REGULAR",
     };
   } catch (error) {
     if (error instanceof ApiError) {
       throw error;
     }
-    if (error && typeof error === 'object' && 'response' in error) {
-      const axiosError = error as any;
+    if (error && typeof error === "object" && "response" in error) {
+      const axiosError = error as {
+        response?: { status: number };
+        message?: string;
+      };
       if (axiosError.response?.status === 404) {
         throw new ApiError(`Ticker ${ticker} not found`);
       }
-      throw new ApiError(`Failed to fetch stock price: ${axiosError.message || 'Network error'}`);
+      throw new ApiError(
+        `Failed to fetch stock price: ${axiosError.message || "Network error"}`,
+      );
     }
     throw new ApiError(`Unexpected error fetching stock price: ${error}`);
   }
@@ -65,7 +74,11 @@ export function getExpirationDate(holdingPeriod: string): string {
 
 // Mock option data since IEX Cloud requires paid subscription
 // In real implementation, you'd use IEX Cloud or another options data provider
-export async function getPutPremium(ticker: string, strike: number, holdingPeriod: string): Promise<number> {
+export async function getPutPremium(
+  ticker: string,
+  strike: number,
+  holdingPeriod: string,
+): Promise<number> {
   try {
     // This is a simplified estimation based on typical option pricing
     // In a real implementation, you would call an options data API
@@ -76,13 +89,17 @@ export async function getPutPremium(ticker: string, strike: number, holdingPerio
     const intrinsicValue = Math.max(strike - stockPrice, 0);
 
     // Estimate time value based on days to expiration and distance from money
-    const daysToExpiration = holdingPeriod === "1w" ? 7 : holdingPeriod === "2w" ? 14 : 30;
+    const daysToExpiration =
+      holdingPeriod === "1w" ? 7 : holdingPeriod === "2w" ? 14 : 30;
     const moneyness = strike / stockPrice;
 
     // Simplified Black-Scholes approximation for educational purposes
     const timeValue = Math.max(
-      stockPrice * 0.02 * Math.sqrt(daysToExpiration / 365) * (1 + Math.abs(1 - moneyness)),
-      0.05 // Minimum premium
+      stockPrice *
+        0.02 *
+        Math.sqrt(daysToExpiration / 365) *
+        (1 + Math.abs(1 - moneyness)),
+      0.05, // Minimum premium
     );
 
     const estimatedPremium = intrinsicValue + timeValue;
@@ -97,35 +114,55 @@ export async function getPutPremium(ticker: string, strike: number, holdingPerio
   }
 }
 
+interface RawOptionData {
+  side: string;
+  strike: number;
+  bid: number;
+  ask: number;
+}
+
 // Alternative function for when real options data is available
-export async function getRealPutPremium(ticker: string, strike: number, expirationDate: string, apiKey: string): Promise<OptionData> {
+export async function getRealPutPremium(
+  ticker: string,
+  strike: number,
+  expirationDate: string,
+  apiKey: string,
+): Promise<OptionData> {
   try {
     // This would be used with IEX Cloud or similar service
     const url = `https://cloud.iexapis.com/stable/stock/${ticker}/options/${expirationDate}?token=${apiKey}`;
     const response = await axios.get(url);
 
-    const putOptions = response.data.filter((option: any) => option.side === "put");
+    const putOptions = response.data.filter(
+      (option: RawOptionData) => option.side === "put",
+    );
 
     if (putOptions.length === 0) {
       throw new ApiError("No put options available for this expiration");
     }
 
     // Find the closest strike price
-    const closest = putOptions.reduce((prev: any, curr: any) => {
-      return Math.abs(curr.strike - strike) < Math.abs(prev.strike - strike) ? curr : prev;
-    });
+    const closest = putOptions.reduce(
+      (prev: RawOptionData, curr: RawOptionData) => {
+        return Math.abs(curr.strike - strike) < Math.abs(prev.strike - strike)
+          ? curr
+          : prev;
+      },
+    );
 
     return {
       strike: closest.strike,
       bid: closest.bid,
       ask: closest.ask,
       midPrice: (closest.bid + closest.ask) / 2,
-      expiration: expirationDate
+      expiration: expirationDate,
     };
   } catch (error) {
-    if (error && typeof error === 'object' && 'response' in error) {
-      const axiosError = error as any;
-      throw new ApiError(`Options API error: ${axiosError.message || 'Network error'}`);
+    if (error && typeof error === "object" && "response" in error) {
+      const axiosError = error as { message?: string };
+      throw new ApiError(
+        `Options API error: ${axiosError.message || "Network error"}`,
+      );
     }
     throw new ApiError(`Failed to fetch options data: ${error}`);
   }

@@ -1,7 +1,9 @@
 import { CalculationResult, CalculationInputs } from "./types";
 import { getCurrentPrice, getPutPremium } from "./api";
 
-export async function calculateProtectivePut(inputs: CalculationInputs): Promise<CalculationResult> {
+export async function calculateProtectivePut(
+  inputs: CalculationInputs,
+): Promise<CalculationResult> {
   const { ticker, stopLoss, maxLoss, holdingPeriod } = inputs;
 
   // Validate inputs
@@ -24,7 +26,7 @@ export async function calculateProtectivePut(inputs: CalculationInputs): Promise
   const putPremium = await getPutPremium(ticker, stopLoss, holdingPeriod);
 
   // Calculate loss per share
-  const lossPerShare = (currentPrice - stopLoss) + putPremium;
+  const lossPerShare = currentPrice - stopLoss + putPremium;
 
   if (lossPerShare <= 0) {
     throw new Error("Invalid calculation: loss per share must be positive");
@@ -90,7 +92,7 @@ export async function calculateProtectivePut(inputs: CalculationInputs): Promise
     stockCost,
     optionCost,
     breakeven,
-    protectionLevel: Math.min(protectionLevel, 100)
+    protectionLevel: Math.min(protectionLevel, 100),
   };
 }
 
@@ -99,7 +101,7 @@ export function formatCurrency(amount: number): string {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+    maximumFractionDigits: 2,
   }).format(amount);
 }
 

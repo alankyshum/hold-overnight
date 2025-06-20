@@ -4,7 +4,7 @@
   "title": "Protective Put Calculator",
   "description": "Calculate protective put positions for earnings plays with strict loss caps",
   "icon": "command-icon.png",
-  "author": "kshum",
+  "author": "raycast_user",
   "categories": [
     "Finance"
   ],
@@ -20,7 +20,8 @@
   "dependencies": {
     "@raycast/api": "^1.79.0",
     "axios": "^1.6.8",
-    "date-fns": "^3.6.0"
+    "date-fns": "^3.6.0",
+    "react": "^18.2.0"
   },
   "devDependencies": {
     "@raycast/eslint-config": "^1.0.6",
@@ -38,5 +39,8 @@
     "fix-lint": "ray lint --fix",
     "lint": "ray lint",
     "publish": "npx @raycast/api@latest publish"
+  },
+  "volta": {
+    "node": "24.2.0"
   }
 }
