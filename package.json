@@ -4,7 +4,7 @@
   "title": "Protective Put Calculator",
   "description": "Calculate protective put positions for earnings plays with strict loss caps",
   "icon": "command-icon.png",
-  "author": "raycast_user",
+  "author": "alankyshum",
   "categories": [
     "Finance"
   ],
